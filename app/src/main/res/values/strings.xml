@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WhackAMole</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_sound">Toggle Sound</string>
+    <string name="app_name">BatHunting</string>
+    <string name="puntuacion_maxima">Puntuación máxima:</string>
+    <string name="cazados">Cazados:</string>
+    <string name="libres">Libres:</string>
 
 </resources>

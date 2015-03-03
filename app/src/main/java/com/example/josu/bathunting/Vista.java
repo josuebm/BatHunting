@@ -32,18 +32,12 @@ public class Vista extends SurfaceView implements SurfaceHolder.Callback {
     private float escalaDibujoAlto;
     private Bitmap mascara;
     private Bitmap murcielago;
-    /*private Bitmap sonido;
-    private Bitmap barras0;
-    private Bitmap barras1;
-    private Bitmap barras2;
-    private Bitmap barras3;*/
     private int murcielago1x, murcielago2x, murcielago3x, murcielago4x, murcielago5x, murcielago6x, murcielago7x;
     private int murcielago1y, murcielago2y, murcielago3y, murcielago4y, murcielago5y, murcielago6y, murcielago7y;
     private int anchoPantalla = 1;
     private int altoPantalla = 1;
     private boolean running = false;
     private boolean portada = true;
-    //private int myMode;
     private int murcielagoActual = 0;
     private boolean apareciendo = true;
     private boolean desapareciendo = false;
@@ -58,12 +52,9 @@ public class Vista extends SurfaceView implements SurfaceHolder.Callback {
     private int cazados = 0;
     private int libres = 0;
     private Paint pincel;
-    //public boolean soundOn = true;
     private boolean gameOver = false;
     private Bitmap gameOverVentana;
-    //private boolean menu;
     private int puntuacionMaxima;
-
     private Hilo hilo;
 
     public Vista(Context context, AttributeSet attrs) {
@@ -78,7 +69,6 @@ public class Vista extends SurfaceView implements SurfaceHolder.Callback {
 
             }
         });
-
         setFocusable(true);
     }
 
@@ -88,11 +78,10 @@ public class Vista extends SurfaceView implements SurfaceHolder.Callback {
 
     class Hilo extends Thread {
 
-        public Hilo(SurfaceHolder surfaceHolder, Context context,
-                    Handler handler) {
+        public Hilo(SurfaceHolder surfaceHolder, Context context, Handler handler) {
             Vista.this.surfaceHolder = surfaceHolder;
             contexto = context;
-            fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.title);
+            fondo = BitmapFactory.decodeResource(context.getResources(), R.drawable.portada);
             anchoFondo = fondo.getWidth();
             altoFondo = fondo.getHeight();
             sonidos = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
@@ -125,18 +114,8 @@ public class Vista extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawBitmap(fondo, 0, 0, null);
                 if(portada){
                     puntuacionMaxima = Integer.valueOf(getPreferenciasCompartidas());
-                    canvas.drawText("Puntuación máxima: "+ puntuacionMaxima, 20, altoPantalla-40, pincel);
-                }
-
-                /*if(!menu)
-                    //Sustituir por imagen
-                    canvas.drawText("MENÚ", 20, altoPantalla-50, pincel);
-                else{
-                    //Sustituir por imagenes
-                    canvas.drawBitmap(sonido, anchoPantalla/2 -200, altoPantalla-50, null);
-
-                }*/
-                if (!portada) {
+                    canvas.drawText(getResources().getString(R.string.puntuacion_maxima) + " " + puntuacionMaxima, 20, altoPantalla-40, pincel);
+                }else {
                     canvas.drawBitmap(murcielago, murcielago1x, murcielago1y, null);
                     canvas.drawBitmap(murcielago, murcielago2x, murcielago2y, null);
                     canvas.drawBitmap(murcielago, murcielago3x, murcielago3y, null);
@@ -151,11 +130,8 @@ public class Vista extends SurfaceView implements SurfaceHolder.Callback {
                     canvas.drawBitmap(mascara, (int) 450 * escalaDibujoAncho, (int) -75 * escalaDibujoAlto, null);
                     canvas.drawBitmap(mascara, (int) 550 * escalaDibujoAncho, (int) -25 * escalaDibujoAlto, null);
                     canvas.drawBitmap(mascara, (int) 650 * escalaDibujoAncho, (int) -75 * escalaDibujoAlto, null);
-                    canvas.drawText("Cazados: " + Integer.toString(cazados), 10, pincel.getTextSize() + 10, pincel);
-                    canvas.drawText("Libres: " + Integer.toString(libres), anchoPantalla - (int) (200 * escalaDibujoAncho), pincel.getTextSize() + 10, pincel);
-                    //canvas.drawText(anchoPantalla/2 -60, altoPantalla-70, anchoPantalla/2 +60, altoPantalla-20, pincel);
-
-
+                    canvas.drawText(getResources().getString(R.string.cazados) + " " + Integer.toString(cazados), 10, pincel.getTextSize() + 10, pincel);
+                    canvas.drawText(getResources().getString(R.string.libres) + " " + Integer.toString(libres), anchoPantalla - (int) (200 * escalaDibujoAncho), pincel.getTextSize() + 10, pincel);
                 }
                 if (golpeando) {
                     canvas.drawBitmap(golpe, posicionX - (golpe.getWidth() / 2), posicionY - (golpe.getHeight() / 2), null);
@@ -188,10 +164,6 @@ public class Vista extends SurfaceView implements SurfaceHolder.Callback {
                                 sonidos.play(sonidoGolpe, volume, volume, 1, 0, 1);
                                 cazados++;
                             }
-                            /*Log.v("PANTALLA", "X: " + posicionX + " Y: " + posicionY);
-                            Log.v("TAMAÑO", "anchoFondo: " + anchoPantalla + " altoFondo " + altoPantalla);
-                            if(!portada && posicionX < 80 && posicionY > (altoPantalla - 70))
-                                menu = true;*/
                         }
                         break;
 
@@ -200,18 +172,12 @@ public class Vista extends SurfaceView implements SurfaceHolder.Callback {
 
                     case MotionEvent.ACTION_UP:
                         if (portada) {
-                            fondo = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.background);
+                            fondo = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.fondo);
                             fondo = Bitmap.createScaledBitmap(fondo, anchoPantalla, altoPantalla, true);
-                            mascara = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.mask);
-                            murcielago = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.mole);
-                            golpe = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.whack);
+                            mascara = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.mascara);
+                            murcielago = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.murcielago);
+                            golpe = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.golpe);
                             gameOverVentana = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.gameover);
-                            /*sonido = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.ic_action_volume_on);
-                            sonido = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.ic_action_volume_on);
-                            barras0 = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.cero_barras);
-                            barras1 = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.una_barras);
-                            barras2 = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.dos_barras);
-                            barras3 = BitmapFactory.decodeResource(contexto.getResources(), R.drawable.tres_barras);*/
                             escalaAncho = (float) anchoPantalla / (float) anchoFondo;
                             escalaAlto = (float) altoPantalla / (float) altoFondo;
                             mascara = Bitmap.createScaledBitmap(mascara, (int) (mascara.getWidth() * escalaAncho), (int) (mascara.getHeight() * escalaAlto), true);
@@ -469,8 +435,7 @@ public class Vista extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         hilo.setSurfaceSize(width, height);
     }
 
